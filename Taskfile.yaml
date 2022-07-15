@@ -1,0 +1,75 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  GITLAB_CONTAINER: gitlab
+  IMAGE_PATH: registry.gitlab.com/docker233/gitlab:latest 
+
+tasks:
+
+  start:
+    desc: start as service
+    cmds:
+      - docker compose up  -d --remove-orphans
+
+  stop:
+    desc: stop the service
+    cmds:
+      - docker compose stop
+
+  pull:
+    cmds:
+      - dir: ./src
+      - git pull || true
+    status:
+      - test ! -d src
+
+  push:
+    desc: push task
+    cmds:
+      - docker push {{.IMAGE_PATH}}
+
+  build:
+    desc: Build the container image
+    cmds:
+      - docker compose up --force-recreate --build --no-start
+
+  rebuild:
+    desc: clean and build
+    cmds:
+      - task: nuke
+      - task: build
+
+  nuke:
+    cmds:
+      - docker compose rm -v -f
+      - docker image prune -a -f
+      - docker volume prune -f
+
+  up:
+    desc: start in foreground mode
+    cmds:
+      - docker pull {{.IMAGE_PAGE}}
+      - docker compose up --remove-orphans
+
+  sh:
+    desc: shell access in the php container
+    cmds:
+      - docker compose exec {{.GITLAB_CONTAINER}} env TERM=xterm-256color script -q -c "/bin/bash" /dev/null
+
+  pass:
+    desc: get root pass
+    cmds:
+      - docker compose exec -it {{.GITLAB_CONTAINER}} grep 'Password:' /etc/gitlab/initial_root_password
+
+  update-permissions:
+    desc: get root pass
+    cmds:
+      - docker compose exec -it {{.GITLAB_CONTAINER}} update-permissions
+
+  logs:
+    desc: logs
+    cmds: 
+      - docker compose logs -f
+
