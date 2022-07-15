@@ -28,6 +28,9 @@ tasks:
   push:
     desc: push task
     cmds:
+      - git add .  || true
+      - git commit -am "$(curl -s https://commit.cacko.net/index.txt)" || true
+      - git push  || true
       - docker push {{.IMAGE_PATH}}
 
   build:
