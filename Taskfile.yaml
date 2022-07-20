@@ -53,7 +53,7 @@ tasks:
   up:
     desc: start in foreground mode
     cmds:
-      - docker pull {{.IMAGE_PAGE}}
+      - docker compose pull {{.IMAGE_PAGE}}
       - docker compose up --remove-orphans
 
   sh:

@@ -22,6 +22,11 @@ services:
         gitlab_rails['db_adapter'] = 'postgresql'
         gitlab_rails['db_encoding'] = 'utf8'
         external_url 'http://gitlab.local'
+        gitlab_rails['terraform_state_enabled'] = false
+        puma['enable'] = false
+        gitlab_kas['enable'] = false
+        grafana['enable'] = false
+        gitaly['enable'] = false
     ports:
       - "8080:80"
       - "8043:443"
