@@ -76,3 +76,8 @@ tasks:
     cmds: 
       - docker compose logs -f
 
+  apilogs:
+    desc: api logs
+    cmds: 
+      - docker compose exec {{.GITLAB_CONTAINER}} env script -q -c "tail -f /var/log/gitlab/gitlab-rails/api_json.log"
+

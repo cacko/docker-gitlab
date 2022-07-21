@@ -23,10 +23,16 @@ services:
         gitlab_rails['db_encoding'] = 'utf8'
         external_url 'http://gitlab.local'
         gitlab_rails['terraform_state_enabled'] = false
-        puma['enable'] = false
         gitlab_kas['enable'] = false
         grafana['enable'] = false
         gitaly['enable'] = false
+        registry['log_level'] = "error"
+        gitlab_shell['log_level'] = 'INFO'
+        nginx['error_log_level'] = "error"
+        gitlab_kas['log_level'] = 'info'
+        patroni['log_level'] = 'error'
+        spamcheck['log_level'] = 'error'
+
     ports:
       - "8080:80"
       - "8043:443"
@@ -35,6 +41,7 @@ services:
       - config:/etc/gitlab
       - logs:/var/log/gitlab
       - data:/var/opt/gitlab
+      - assets:/assets
   postgresql:
     restart: always
     image: postgres:13.6-alpine
@@ -55,3 +62,4 @@ volumes:
   logs:
   data:
   dbdata:
+  assets:
